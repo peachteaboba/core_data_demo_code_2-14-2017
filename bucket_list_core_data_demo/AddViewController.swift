@@ -9,15 +9,12 @@
 import UIKit
 import CoreData
 
-
-
-
 class AddViewController: UIViewController {
 
     // Global Variables ::::::::::::::::::::::::::::::::::::::
     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     var addMissionDelegate: AddMissionDelegate?
-    
+    var missionToEdit: Mission?
     
     // Outlets and Actions :::::::::::::::::::::::::::::::::::
     @IBOutlet weak var inputField: UITextField!
@@ -31,10 +28,18 @@ class AddViewController: UIViewController {
         
         if let text = self.inputField.text {
             if text != "" {
-                // Save to core data 
-                let newMission = NSEntityDescription.insertNewObject(forEntityName: "Mission", into: context) as! Mission
-                newMission.content = text
                 
+                if let edit = self.missionToEdit {
+                    // Editing mission
+                    edit.content = text
+                    
+                } else {
+                    // Adding New Mission
+                    let newMission = NSEntityDescription.insertNewObject(forEntityName: "Mission", into: context) as! Mission
+                    newMission.content = text
+                }
+                
+                // Save the changes
                 if self.context.hasChanges {
                     do {
                         try self.context.save()
@@ -64,6 +69,11 @@ class AddViewController: UIViewController {
     // UI Lifecycle ::::::::::::::::::::::::::::::::::::::::::
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        // Auto populate if editing
+        if let edit = self.missionToEdit {
+            self.inputField.text = edit.content
+        }
     }
     
     override func didReceiveMemoryWarning() {

@@ -9,9 +9,6 @@
 import UIKit
 import CoreData
 
-
-
-
 class BucketListViewController: UITableViewController, AddMissionDelegate {
 
     // Global Variables ::::::::::::::::::::::::::::::::::::::
@@ -60,6 +57,20 @@ class BucketListViewController: UITableViewController, AddMissionDelegate {
         return cell
     }
     
+    // Edit the mission
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
+        // Instantiate the destination view controller
+        let vc = self.storyboard?.instantiateViewController(withIdentifier: "addVC") as! AddViewController
+        
+        // Set properties of vc
+        vc.addMissionDelegate = self
+        vc.missionToEdit = self.missionArray[indexPath.row]
+        
+        // Transition
+        self.present(vc, animated: true, completion: nil)
+        
+    }
     
     
     
