@@ -57,7 +57,9 @@ class BucketListViewController: UITableViewController, AddMissionDelegate {
         return cell
     }
     
-    // Edit the mission
+    // Edit the mission ***********************************************************
+    // ****************************************************************************
+    // ****************************************************************************
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
         // Instantiate the destination view controller
@@ -70,6 +72,25 @@ class BucketListViewController: UITableViewController, AddMissionDelegate {
         // Transition
         self.present(vc, animated: true, completion: nil)
         
+    }
+    
+    // Swipe to delete ************************************************************
+    // ****************************************************************************
+    // ****************************************************************************
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+        
+        // Delete the object from core data
+        self.context.delete(self.missionArray[indexPath.row])
+        // Save the changes
+        if self.context.hasChanges {
+            do {
+                try self.context.save()
+                print("successfully deleted a mission from core data")
+                self.fetchAllMissions()
+            } catch {
+                print("\(error)")
+            }
+        }
     }
     
     
